@@ -41,7 +41,7 @@ let build = function(args) {
         }
     }
 
-    return {success: new Builder(workspace, buildfile).run()};
+    return {success: new Builder(workspace, buildfile, out).run()};
 };
 
 module.exports = build;

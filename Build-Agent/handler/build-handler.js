@@ -3,9 +3,10 @@
 const childprocess = require("child_process");
 
 class Builder {
-    constructor(workspace, buildfile) {
+    constructor(workspace, buildfile, outpath) {
         this.workspace = workspace;
         this.buildfile = buildfile;
+        this.outpath = outpath;
 
         this.next = this.workspace["default-build-task"];
     }
@@ -51,7 +52,7 @@ class Builder {
         }
         let path = this.replacePathVariables(task.args[0]);
         console.log(`[${task.label}] Executing [${path}]`);
-        childprocess.exec(path);
+        childprocess.execSync(path);
     }
 
     replacePathVariables(path) {
