@@ -12,7 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\Build-Agent\\ci-agent.js",
-            "args": ["build", "workspace=Test Workspace"]
+            "args": ["build", "workspace=Hitman-2-Hack"]
         }
     ]
 }

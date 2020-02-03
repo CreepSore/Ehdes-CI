@@ -27,11 +27,15 @@ class Builder {
 
         if(currentTask.after) {
             this.next = currentTask.after;
-            this.run();
+            return this.run();
         }
+
+        return true;
     }
 
     runTask(task) {
+        if(!task) return;
+
         switch(task["build-type"]) {
             case "shell": {
                 this.runShellTask(task);

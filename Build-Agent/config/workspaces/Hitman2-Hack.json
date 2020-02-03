@@ -1,0 +1,7 @@
+{
+    "name": "Hitman-2-Hack",
+    "description": "Hitman 2 Hack",
+    "path": "C:\\dev\\Git\\C++\\Hitman-2-Hack",
+    "default-build-task": "build-script",
+    "arch": "win-x86"
+}
