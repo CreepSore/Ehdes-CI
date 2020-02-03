@@ -40,5 +40,5 @@ Example Build-Config:
 This command will build the Workspace with the name "TEST-WORKSPACE" using the ".ehdes-ci.json" file inside the Workspace Root. The output will be saved inside the "build" folder inside the Workspace Root.
 
 `node ci-agent build workspace=TEST-WORKSPACE buildfile="/home/testuser/buildscripts/build.json" out="/home/testuser/buildresults/TEST-WORKSPACE"`  
-This ocmmand will build the Workspace with the name "TEST-WORKSPACE" using the "build.json" file inside the "/home/testuser/buildscripts/" folder. The output will be saved into "/home/testuser/buildresults/TEST-WORKSPACE/".
+This command will build the Workspace with the name "TEST-WORKSPACE" using the "build.json" file inside the "/home/testuser/buildscripts/" folder. The output will be saved into "/home/testuser/buildresults/TEST-WORKSPACE/".
 
