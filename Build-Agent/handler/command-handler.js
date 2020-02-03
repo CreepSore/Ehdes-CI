@@ -20,8 +20,9 @@ class CommandHandler {
     triggerCommand(trigger, args = {}) {
         let func = this.getCommand(trigger);
         if(func) {
-            func(args);
+            return func(args);
         }
+        return {success: false, error: "Invalid Command"};
     }
 
     /**

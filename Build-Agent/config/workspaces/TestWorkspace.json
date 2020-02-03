@@ -1,0 +1,7 @@
+{
+    "name": "Test Workspace",
+    "description": "Hello World Application",
+    "path": "C:\\dev\\Test",
+    "default-build-task": "build-script",
+    "arch": "win-x86"
+}
