@@ -6,7 +6,7 @@ const cmdHelp = require("./logic/commands/cmd-help");
 const cmdBuild = require("./logic/commands/cmd-build");
 const cmdWorkspaces = require("./logic/commands/cmd-workspaces");
 
-process.argv.splice(0, 2);
+process.argv.splice(0, process.argv.indexOf(__filename) + 1);
 let argParser = new ArgumentParser(process.argv);
 let cmdHandler = new CommandHandler();
 
@@ -30,7 +30,7 @@ let init = function() {
         result = cmdHandler.triggerCommand("help");
     }
     if(!result.success) {
-        console.log(result.error);
+        console.log(JSON.stringify(result));
     }
 };
 

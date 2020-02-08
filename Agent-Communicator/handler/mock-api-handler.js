@@ -23,9 +23,14 @@ class MockApiHandler extends ApiHandlerInterface{
 
     register() {
         return new Promise((res, rej) => {
+            let workspaces = [];
+
             if(this._running) {
                 setTimeout(() => {
-                    this._registeredAgents.push(this.config.uuid);
+                    this._registeredAgents.push({
+                        uuid: this.config.uuid,
+                        workspaces: workspaces
+                    });
                     res();
                 }, 250 * (Math.random() + 1));
                 return;
@@ -72,7 +77,7 @@ class MockApiHandler extends ApiHandlerInterface{
         return new Promise((res, rej) => {
             if(this._running) {
                 setTimeout(() => {
-                    res(JSON.stringify(jobs));
+                    res(jobs);
                 }, 250 * (Math.random() + 1));
                 return;
             }

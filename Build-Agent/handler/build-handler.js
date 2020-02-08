@@ -33,12 +33,18 @@ class Builder {
         }
 
         let summary = {
+            workspace: this.workspace,
             success: result,
             buildtime: time,
             date: starttime,
             gitBranch: gitHead
         };
         fs.writeFileSync(`${this.outpath}/summary.json`, JSON.stringify(summary, null, 4));
+
+        console.log(JSON.stringify({
+            logtype: "summary",
+            summary: summary
+        }));
 
         return result;
     }
@@ -71,17 +77,28 @@ class Builder {
             }
 
             default: {
-                console.log(`Invalid Task Build-Type '${task["build-type"]}'`);
+                console.log(JSON.stringify({
+                    logtype: "invalid-task",
+                    message: `Invalid Task Build-Type '${task["build-type"]}'`
+                }));
                 return false;
             }
         }
 
         if(result && result.rule !== -1) {
             if(!result.success) {
-                console.log(`[${task.label}] Rule ${result.rule} failed.`);
+                console.log(JSON.stringify({
+                    logtype: "rule-finished",
+                    message: `[${task.label}] Rule ${result.rule} failed.`,
+                    success: false
+                }));
             }
             else {
-                console.log(`[${task.label}] Rule ${result.rule} succeeded.`);
+                console.log(JSON.stringify({
+                    logtype: "rule-finished",
+                    message: `[${task.label}] Rule ${result.rule} succeeded.`,
+                    success: true
+                }));
             }
         }
         return result.success;
@@ -89,11 +106,17 @@ class Builder {
 
     runShellTask(task) {
         if(task.args.length === 0) {
-            console.log(`Failed to run Task ${task.label}: Invalid Argument length`);
+            console.log(JSON.stringify({
+                logtype: "task-failure",
+                message: `Failed to run Task ${task.label}: Invalid Argument length`
+            }));
             return {success: false, rule: -1};
         }
         let path = this.replacePathVariables(task.args[0]);
-        console.log(`[${task.label}] Executing [${path}]`);
+        console.log(JSON.stringify({
+            logtype: "status-changed",
+            message: `[${task.label}] Executing [${path}]`
+        }));
 
         let stdout = childprocess.execSync(path);
         fs.writeFileSync(`${this.outpath}/${task.label}.stdout.log`, stdout.toString());
