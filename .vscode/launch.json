@@ -13,6 +13,16 @@
             ],
             "program": "${workspaceFolder}\\Build-Agent\\ci-agent.js",
             "args": ["build", "workspace=Hitman-2-Hack"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Communicator",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\Agent-Communicator\\launcher.js",
+            "args": []
         }
     ]
 }
