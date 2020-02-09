@@ -124,8 +124,8 @@ class Builder {
         let stdout = childprocess.execSync(pvar, {
             stdio: "pipe"
         });
-        fs.writeFileSync(pvar.join(this.outpath, `${task.label}.stdout.log`), stdout.toString());
-        fs.appendFileSync(pvar.join(this.outpath, "full.stdout.log"), stdout.toString());
+        fs.writeFileSync(path.join(this.outpath, `${task.label}.stdout.log`), stdout.toString());
+        fs.appendFileSync(path.join(this.outpath, "full.stdout.log"), stdout.toString());
         if(task.rules) {
             let result = this.handleStdoutRules(stdout, task.rules);
 
