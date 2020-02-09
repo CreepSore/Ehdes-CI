@@ -121,7 +121,9 @@ class Builder {
             message: `[${task.label}] Executing [${path}]`
         }));
 
-        let stdout = childprocess.execSync(path);
+        let stdout = childprocess.execSync(path, {
+            stdio: "pipe"
+        });
         fs.writeFileSync(`${this.outpath}/${task.label}.stdout.log`, stdout.toString());
         fs.appendFileSync(`${this.outpath}/full.stdout.log`, stdout.toString());
         if(task.rules) {
