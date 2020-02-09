@@ -2,12 +2,13 @@
 
 const fs = require("fs");
 const childprocess = require("child_process");
+const path = require("path");
 
 class Builder {
     constructor(workspace, buildfile, outpath) {
         this.workspace = workspace;
         this.buildfile = buildfile;
-        this.outpath = `${outpath}/${new Date().toISOString().replace(/:|\.|-/g, "_")}/`;
+        this.outpath = path.join(outpath, new Date().toISOString().replace(/:|\.|-/g, "_"));
 
         this.next = this.workspace["default-build-task"];
     }
@@ -39,7 +40,7 @@ class Builder {
             date: starttime,
             gitBranch: gitHead
         };
-        fs.writeFileSync(`${this.outpath}/summary.json`, JSON.stringify(summary, null, 4));
+        fs.writeFileSync(path.join(this.outpath, "summary.json"), JSON.stringify(summary, null, 4));
 
         console.log(JSON.stringify({
             logtype: "summary",
@@ -50,7 +51,9 @@ class Builder {
     }
 
     run() {
-        fs.mkdirSync(this.outpath);
+        if(!fs.existsSync(this.outpath)) {
+            fs.mkdirSync(this.outpath);
+        }
         let currentTask = this.getTaskByLabel(this.next);
 
         let result = this.runTask(currentTask);
