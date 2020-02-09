@@ -63,6 +63,7 @@ class MockApiHandler extends ApiHandlerInterface{
             if(this._running) {
                 setTimeout(() => {
                     this._buildResults.push(buildresult);
+                    this._jobs.splice(this._jobs.indexOf(buildresult.job), 1);
                     res(JSON.stringify(buildresult));
                 }, 250 * (Math.random() + 1));
                 return;

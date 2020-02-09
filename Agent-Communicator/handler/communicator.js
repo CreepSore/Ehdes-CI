@@ -29,6 +29,7 @@ class Communicator {
 
     _loop() {
         if (this.api_haderror) {
+            this.handledJobs = [];
             this.api.register()
                 .then(() => {
                     this.api_haderror = false;
