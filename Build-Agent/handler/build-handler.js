@@ -115,17 +115,17 @@ class Builder {
             }));
             return {success: false, rule: -1};
         }
-        let path = this.replacePathVariables(task.args[0]);
+        let pvar = this.replacePathVariables(task.args[0]);
         console.log(JSON.stringify({
             logtype: "status-changed",
-            message: `[${task.label}] Executing [${path}]`
+            message: `[${task.label}] Executing [${pvar}]`
         }));
 
-        let stdout = childprocess.execSync(path, {
+        let stdout = childprocess.execSync(pvar, {
             stdio: "pipe"
         });
-        fs.writeFileSync(`${this.outpath}/${task.label}.stdout.log`, stdout.toString());
-        fs.appendFileSync(`${this.outpath}/full.stdout.log`, stdout.toString());
+        fs.writeFileSync(pvar.join(this.outpath, `${task.label}.stdout.log`), stdout.toString());
+        fs.appendFileSync(pvar.join(this.outpath, "full.stdout.log"), stdout.toString());
         if(task.rules) {
             let result = this.handleStdoutRules(stdout, task.rules);
 
