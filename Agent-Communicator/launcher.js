@@ -1,5 +1,5 @@
 "use strict";
-const MockApiHandler = require("./handler/mock-api-handler");
+const MockApiHandler = require("./handler/api-handler/mock-api-handler");
 const ConfigParser = require("./handler/config-parser");
 const KeyStorage = require("./handler/key-storage");
 const Communicator = require("./handler/communicator");
