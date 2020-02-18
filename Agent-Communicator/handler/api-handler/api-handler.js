@@ -45,7 +45,7 @@ class ApiHandler extends ApiHandlerInterface {
     }
 
     pushBuildResult(result) {
-        let url = `${this.config.controller.url}/api/buildresult`;
+        let url = `${this.config.controller.url}/api/buildresults`;
         return new Promise((res, rej) => {
             request.post(url, {
                 form: {

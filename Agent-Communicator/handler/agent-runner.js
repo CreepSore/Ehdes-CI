@@ -26,6 +26,9 @@ class AgentRunner {
                     if(log.logtype === "summary") {
                         res(log.summary);
                     }
+                    if(log.success === false && log.error && log.error === "Invalid Workspace specified!") {
+                        res(JSON.stringify({success: false, error: "Invalid Workspace"}));
+                    }
                 }
                 catch (ex) {
                     process.stdout.write(data);
