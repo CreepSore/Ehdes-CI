@@ -1,7 +1,7 @@
 {
     "uuid": "2409d320-2b30-40f4-917a-177c5b6056ec",
     "controller": {
-        "url": "https://localhost:8091/",
+        "url": "http://localhost:8099",
         "secret": "3f10852ff0391d31c44be60e9bfb10f2"
     },
     "agent": {

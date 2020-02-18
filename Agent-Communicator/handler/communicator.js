@@ -21,10 +21,14 @@ class Communicator {
     }
 
     start() {
-        this.connect(() => {
-            this.log("Registered");
-            setInterval(() => { this._loop(); }, 100);
-        });
+        this.log("Registered");
+        this.api.heartbeat();
+        setInterval(() => { this._loop(); }, 100);
+        setInterval(() => { this.heartbeat(); }, 5000);
+    }
+
+    heartbeat() {
+        this.api.heartbeat();
     }
 
     _loop() {

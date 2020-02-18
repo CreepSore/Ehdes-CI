@@ -13,7 +13,7 @@ const log = function(msg, context) {
 const checkKeepalive = function(agents, storage) {
     let currentDate = Number(new Date());
     agents.forEach((agent, i) => {
-        if(!agent.lastKeepalive || currentDate - agent.lastKeepalive > storage.get("EXPRESS.AGENT_TIMEOUT", 5000)) {
+        if(!agent.lastKeepalive || currentDate - agent.lastKeepalive > storage.get("EXPRESS.AGENT_TIMEOUT", 10000)) {
             agents.splice(i, 1);
             console.log(`Removed agent with id ${agent.uuid} because of timeout`, "keepalive");
         }
@@ -23,7 +23,7 @@ const checkKeepalive = function(agents, storage) {
 const registerApi = function(storage, app) {
     app.post("/api/register", (req, res) => {
         let agents = storage.get("EXPRESS.AGENTS", []);
-        let agentData = JSON.parse(req.body.agent);
+        let agentData = req.body.agent;
         let agent = agents.filter(a => a.uuid === agentData.uuid);
 
         if(agent.length === 0) {
@@ -44,7 +44,7 @@ const registerApi = function(storage, app) {
     });
 
     app.post("/api/jobs", (req, res) => {
-        let job = JSON.parse(req.body.job);
+        let job = req.body.job;
         if(!job.agentid) {
             res.end(JSON.stringify({success: false, error: 10000}));
             return;
@@ -54,6 +54,7 @@ const registerApi = function(storage, app) {
         if(job.jobid && job.workspace) {
             jobs.push(job);
             res.end(JSON.stringify({success: true, error: 0}));
+            log(`Adding Job[${job.jobid}].`, "API/jobs");
         }
         else {
             res.end(JSON.stringify({success: false, error: 10002}));
