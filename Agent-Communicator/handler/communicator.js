@@ -21,14 +21,17 @@ class Communicator {
     }
 
     start() {
-        this.log("Registered");
-        this.api.heartbeat();
+        this.log("Started");
+        this.heartbeat();
         setInterval(() => { this._loop(); }, 100);
         setInterval(() => { this.heartbeat(); }, 5000);
     }
 
     heartbeat() {
-        this.api.heartbeat();
+        this.api.heartbeat()
+            .catch(() => {
+                // Do nothing, lol
+            });
     }
 
     _loop() {

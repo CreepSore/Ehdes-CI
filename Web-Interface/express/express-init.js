@@ -45,7 +45,7 @@ const registerApi = function(storage, app) {
     });
 
     app.post("/api/jobs", (req, res) => {
-        let job = req.body.job;
+        let job = JSON.parse(req.body.job);
         if(!job.agentid) {
             res.end(JSON.stringify({success: false, error: 10000}));
             return;

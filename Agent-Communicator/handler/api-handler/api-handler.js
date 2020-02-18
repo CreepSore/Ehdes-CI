@@ -71,7 +71,11 @@ class ApiHandler extends ApiHandlerInterface {
     fetchJobs() {
         let url = `${this.config.controller.url}/api/jobs`;
         return new Promise((res, rej) => {
-            request.get(url, (e, r, b) => {
+            request.get(url, {
+                qs: {
+                    uuid: this.config.uuid
+                }
+            }, (e, r, b) => {
                 if(e) {
                     rej(e);
                     return;
