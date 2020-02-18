@@ -40,10 +40,13 @@ class AgentRunner {
                 silent: true,
                 execArgv: []
             });
+            let lines = [];
 
             agentproc.stdout.on("data", data => {
-                let lines = data.toString().split("\n");
+                lines.push([... data.toString().split("\n")][0]);
+            });
 
+            agentproc.on("exit", () => {
                 let workspaces = [];
                 lines.forEach(line => {
                     let match = line.match(/(.*) -> (.*)/);

@@ -33,6 +33,7 @@ const registerApi = function(storage, app) {
         }
         else {
             agent[0].lastKeepalive = Number(new Date());
+            agent[0].workspaces = agentData.workspaces;
         }
         res.end(JSON.stringify({success: true}));
     });
