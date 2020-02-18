@@ -1,5 +1,4 @@
 "use strict";
-const path = require("path");
 const request = require("request");
 
 const ApiHandlerInterface = require("./api-handler-interface");
@@ -70,8 +69,17 @@ class ApiHandler extends ApiHandlerInterface {
     }
 
     fetchJobs() {
+        let url = `${this.config.controller.url}/api/jobs`;
         return new Promise((res, rej) => {
-            res();
+            request.get(url, (e, r, b) => {
+                if(e) {
+                    rej(e);
+                    return;
+                }
+
+                let body = JSON.parse(b);
+                res(body);
+            });
         });
     }
 }
