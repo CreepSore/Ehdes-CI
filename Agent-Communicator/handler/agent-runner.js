@@ -15,7 +15,6 @@ class AgentRunner {
 
     buildWorkspace(workspace) {
         return new Promise(res => {
-
             let agentproc = childProcess.fork(this.agentPath, ["build", `workspace=${workspace}`], {
                 silent: true,
                 execArgv: []

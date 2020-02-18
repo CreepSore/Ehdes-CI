@@ -7,12 +7,24 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Web-Interface",
+            "program": "${workspaceFolder}\\Web-Interface\\app.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch CI-Agent",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\Build-Agent\\ci-agent.js",
-            "args": ["build", "workspace=Hitman-2-Hack"]
+            "args": [
+                "build",
+                "workspace=Hitman-2-Hack"
+            ]
         },
         {
             "type": "node",
