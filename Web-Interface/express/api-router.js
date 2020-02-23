@@ -10,7 +10,7 @@ const register = function(storage, app) {
         let agentData = req.body.agent;
         let agent = agents.filter(a => a.uuid === agentData.uuid);
 
-        if(agent.length === 0) {
+        if(agent.length === 0) { // if agent doesn't already exist
             agentData.lastKeepalive = Number(new Date());
             agents.push(agentData);
             log(`Adding Agent[${agentData.uuid}].`, "API/Register");

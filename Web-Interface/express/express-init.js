@@ -23,7 +23,17 @@ const checkKeepalive = function(agents, storage) {
 
 const registerViews = function(storage, app) {
     app.get("/agents", (req, res) => {
-        res.end(JSON.stringify(storage.get("EXPRESS.AGENTS", [])));
+        let body = [];
+        storage.get("EXPRESS.AGENTS").forEach(agent => {
+            body.push([agent.uuid, JSON.stringify(agent.workspaces)]);
+        });
+
+        res.render("table-view", {
+            head: [
+                ["UUID", "Workspaces"]
+            ],
+            body: body
+        });
     });
 };
 
