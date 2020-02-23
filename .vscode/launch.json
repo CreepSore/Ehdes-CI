@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Web-Interface",
-            "program": "${workspaceFolder}\\Web-Interface\\app.js",
+            "program": "${workspaceFolder}/Web-Interface/app.js",
             "skipFiles": [
                 "<node_internals>/**"
             ]

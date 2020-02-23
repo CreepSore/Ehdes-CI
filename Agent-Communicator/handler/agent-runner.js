@@ -6,7 +6,7 @@ const childProcess = require("child_process");
 class AgentRunner {
     constructor(storage) {
         this.storage = storage;
-        this.agentPath = path.join(this.storage.getObject("BASE_PATH"), this.storage.getObject("CFG").getConfig().agent.path);
+        this.agentPath = this.storage.getObject("CFG").getConfig().agent.path;
 
         if(!fs.existsSync(this.agentPath)) {
             throw new Error(`Agent does not exist at specified path [${this.agentPath}]`);
