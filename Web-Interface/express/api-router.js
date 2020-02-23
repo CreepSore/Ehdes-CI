@@ -1,4 +1,5 @@
 "use strict";
+const guuid = require("uuid");
 
 const log = function(msg, context) {
     console.log(`[${new Date().toISOString()}][Express]${context ? `[${context}]` : ""} ${msg}`);
@@ -30,16 +31,24 @@ const jobs = function(storage, app) {
     });
 
     app.post("/api/jobs", (req, res) => {
-        let job = JSON.parse(req.body.job);
+        if(!req.body.job) {
+            res.end(JSON.stringify({success: false, error: 100}))
+            return;
+        }
+        let job = req.body.job;
         if(!job.agentid) {
             res.end(JSON.stringify({success: false, error: 10000}));
             return;
         }
 
+        if(!job.jobid) {
+            job.jobid = guuid.v1().toString();
+        }
+
         let sJobs = storage.get("EXPRESS.JOBS");
-        if(job.jobid && job.workspace) {
+        if(job.workspace) {
             sJobs.push(job);
-            res.end(JSON.stringify({success: true, error: 0}));
+            res.end(JSON.stringify({success: true, error: 0, jobid: job.jobid}));
             log(`Adding Job[${job.jobid}].`, "API/jobs");
         }
         else {

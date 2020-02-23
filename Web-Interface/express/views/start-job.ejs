@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ehdes-CI | Agents</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="startjob.css">
+
+    <script
+			  src="https://code.jquery.com/jquery-3.4.1.js"
+			  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+			  crossorigin="anonymous"></script>
+</head>
+<body>
+    <select id="select-agent"><option></option></select>
+    <select id="select-job" disabled="true"></select>
+    <button id="button-exec">Launch</button>
+    <p id="paragraph-result"></p>
+
+    <script type="application/javascript">
+        var agents = JSON.parse("<%- agents.replace(/"/g, '\\"') %>");
+
+        function setupComboBoxes() {
+            let selectAgent = document.getElementById("select-agent");
+            let selectJob = document.getElementById("select-job");
+            let buttonExec = document.getElementById("button-exec");
+
+            selectJob.setAttribute("disabled", "true");
+            buttonExec.setAttribute("disabled", "true");
+
+            let options = "<option></option>";
+            agents.forEach(agent => {
+                options = `${options}<option value="${agent.uuid}">${agent.label}</option>`
+            });
+            selectAgent.innerHTML = options;
+        }
+
+        function setupComboBoxEvents() {
+            let selectAgent = document.getElementById("select-agent");
+            let selectJob = document.getElementById("select-job");
+            let buttonExec = document.getElementById("button-exec");
+            selectAgent.addEventListener("change", function(event) {
+                let newChild = this.selectedOptions[0];
+                if(newChild.value) {
+                    selectJob.removeAttribute("disabled");
+                    let options = "<option></option>";
+                    let agentFilter = agents.filter(a => a.uuid === newChild.value);
+                    if(agentFilter === 0) return;
+                    let agent = agentFilter[0];
+                    agent.workspaces.forEach(workspace => {
+                        options = `${options}<option value="${workspace}">${workspace}</option>`
+                    });
+                    selectJob.innerHTML = options;
+                } else {
+                    selectJob.setAttribute("disabled", "true");
+                    buttonExec.setAttribute("disabled", "true");
+                    selectJob.innerHTML = "";
+                }
+            });
+
+            selectJob.addEventListener("change", function(event) {
+                let newChild = this.selectedOptions[0];
+                if(newChild.value) {
+                    buttonExec.removeAttribute("disabled");
+                } else {
+                    buttonExec.setAttribute("disabled", "true");
+                }
+            });
+        }
+
+        function setupButtonEvents() {
+            let buttonExec = document.getElementById("button-exec");
+            let pResult = document.getElementById("paragraph-result");
+            buttonExec.addEventListener("click", () => {
+                let selectedAgent = document.getElementById("select-agent").selectedOptions[0].value;
+                let selectedJob = document.getElementById("select-job").selectedOptions[0].value;
+
+                $.post("/api/jobs", {
+                    job: {
+                        agentid: selectedAgent,
+                        workspace: selectedJob
+                    }
+                }, (data) => {
+                    let status = JSON.parse(data);
+                    if(status.success && status.error === 0) {
+                        pResult.innerText = `Job ${status.jobid} started!`
+                    }
+                });
+            });
+        }
+
+        window.addEventListener("load", () => {
+            setupComboBoxes();
+            setupComboBoxEvents();
+            setupButtonEvents();
+        });
+    </script>
+</body>
+</html>

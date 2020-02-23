@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <title>Ehdes-CI | Agents</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <% cssfiles.forEach(cssfile => { %>
+        <link rel="stylesheet" type="text/css" media="screen" href="<%= cssfile %>">
+    <% });%>
 </head>
 <body>
     <table>
@@ -12,7 +14,7 @@
             <% head.forEach(headRow => { %>
                 <tr>
                     <% headRow.forEach(column => { %>
-                        <td><%= column %></td>
+                        <td><%- column %></td>
                     <% }); %>
                 </tr>
             <% }); %>
@@ -21,7 +23,7 @@
             <% body.forEach(bodyRow => { %>
                 <tr>
                     <% bodyRow.forEach(column => { %>
-                        <td><%= column %></td>
+                        <td><%- column %></td>
                     <% }); %>
                 </tr>
             <% }); %>

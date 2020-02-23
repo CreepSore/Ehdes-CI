@@ -25,14 +25,21 @@ const registerViews = function(storage, app) {
     app.get("/agents", (req, res) => {
         let body = [];
         storage.get("EXPRESS.AGENTS").forEach(agent => {
-            body.push([agent.uuid, JSON.stringify(agent.workspaces)]);
+            body.push([agent.uuid, agent.workspaces ? agent.workspaces.join(", ") : ""]);
         });
 
         res.render("table-view", {
             head: [
                 ["UUID", "Workspaces"]
             ],
-            body: body
+            body: body,
+            cssfiles: ["/css/basic_table.css"]
+        });
+    });
+
+    app.get("/startjob", (req, res) => {
+        res.render("start-job", {
+            agents: JSON.stringify(storage.get("EXPRESS.AGENTS"))
         });
     });
 };
@@ -50,7 +57,7 @@ const intialize = function(storage) {
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
-    app.use("/static", express.static(path.join(__dirname, "static")));
+    app.use(express.static(path.join(__dirname, "static")));
     app.set("view engine", "ejs");
     app.set("views", path.join(__dirname, "views"));
 
