@@ -19,6 +19,7 @@ class ApiHandler extends ApiHandlerInterface {
                         form: {
                             agent: {
                                 uuid: this.config.uuid,
+                                label: this.config.label,
                                 workspaces: workspaces
                             }
                         }
