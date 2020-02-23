@@ -1,11 +1,12 @@
 "use strict";
 
 const fs = require("fs");
+const path = require("path");
 
 class WorkspaceHandler {
     static getRegisteredWorkspaces() {
         let workspaces = [];
-        let files = fs.readdirSync(`${__dirname}/../config/workspaces/`, {encoding: "utf8"});
+        let files = fs.readdirSync(path.join(__dirname, "..", "config", "workspaces"), {encoding: "utf8"});
 
         files.forEach(file => {
             if(!file.endsWith(".json")) {
@@ -31,12 +32,12 @@ class WorkspaceHandler {
             });
         }
 
-        let path = `${__dirname}/../config/workspaces/${ws}`;
-        if(!fs.existsSync(path)) {
+        let wpath = path.join(__dirname, "..", "config", "workspaces", ws);
+        if(!fs.existsSync(wpath)) {
             return false;
         }
 
-        return JSON.parse(fs.readFileSync(path, {encoding: "utf8"}).toString());
+        return JSON.parse(fs.readFileSync(wpath, {encoding: "utf8"}).toString());
     }
 
     static getWorkspaceBuildScript(name) {
