@@ -66,6 +66,17 @@ const registerViews = function(storage, app) {
             secret: storage.get("EXPRESS.SECRET")
         });
     });
+
+    app.get("/jobdetails/workspace/latest/:workspace", (req, res) => {
+        let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace);
+        if(builds.length > 0) {
+            let build = builds[0];
+            res.redirect(`/jobdetails/${build.job.jobid}`);
+        }
+        else {
+            res.redirect("/");
+        }
+    });
 };
 
 /**
