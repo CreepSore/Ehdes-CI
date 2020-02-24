@@ -42,7 +42,7 @@ class WorkspaceHandler {
 
     static getWorkspaceBuildScript(name) {
         let workspaceInfo = this.getWorkspaceInfo(name);
-        let scriptPath = `${workspaceInfo.path}/.ehdes-ci.json`;
+        let scriptPath = path.join(workspaceInfo.path, ".ehdes-ci.json");
 
         if(!fs.existsSync(scriptPath)) {
             return false;
