@@ -42,6 +42,27 @@ const registerViews = function(storage, app) {
             agents: JSON.stringify(storage.get("EXPRESS.AGENTS"))
         });
     });
+
+    app.get("/jobdetails/:jobid", (req, res) => {
+        let buildresult = {};
+        let job = storage.get("EXPRESS.JOBS").filter(j => j.jobid === req.params.jobid)[0];
+        if(!job) {
+            job = storage.get("EXPRESS.BUILDS").filter(b => b.job.jobid === req.params.jobid)[0];
+            buildresult = job;
+            if(job) {
+                job = buildresult.job; // unwrapping job from buildresult
+            }
+            else {
+                res.redirect("/startjob");
+                return;
+            }
+        }
+
+        res.render("job-details", {
+            job: job,
+            buildresult: buildresult
+        });
+    });
 };
 
 /**
