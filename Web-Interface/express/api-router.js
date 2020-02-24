@@ -127,6 +127,9 @@ const registerApi = function(storage, app) {
                 next();
             }
         }
+        else {
+            next();
+        }
     });
 
     register(storage, app);
