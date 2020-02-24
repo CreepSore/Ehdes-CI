@@ -32,9 +32,15 @@ class ApiHandler extends ApiHandlerInterface {
                             return;
                         }
 
-                        let body = JSON.parse(b);
-                        if(!body.success) {
-                            rej(body.error);
+                        try {
+                            let body = JSON.parse(b);
+                            if(!body.success) {
+                                rej(body.error);
+                                return;
+                            }
+                        }
+                        catch (ex) {
+                            rej();
                             return;
                         }
 
@@ -64,9 +70,15 @@ class ApiHandler extends ApiHandlerInterface {
                     return;
                 }
 
-                let body = JSON.parse(b);
-                if(!body.success) {
-                    rej(body.error);
+                try {
+                    let body = JSON.parse(b);
+                    if(!body.success) {
+                        rej(body.error);
+                        return;
+                    }
+                }
+                catch (ex) {
+                    rej(ex);
                     return;
                 }
 
@@ -89,8 +101,13 @@ class ApiHandler extends ApiHandlerInterface {
                     return;
                 }
 
-                let body = JSON.parse(b);
-                res(body);
+                try {
+                    let body = JSON.parse(b);
+                    res(body);
+                }
+                catch (ex) {
+                    rej(ex);
+                }
             });
         });
     }
