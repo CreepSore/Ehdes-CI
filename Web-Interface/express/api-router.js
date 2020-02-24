@@ -89,7 +89,7 @@ const buildresults = function(storage, app) {
     app.get("/api/buildresults/shield/workspace/latest/:workspace", (req, res) => {
         let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace);
         if(builds.length > 0) {
-            let build = builds[0];
+            let build = builds[builds.length - 1];
             if(build.summary.success) {
                 res.redirect("https://img.shields.io/badge/build-succeeded-green");
             }
