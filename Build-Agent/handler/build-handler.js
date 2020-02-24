@@ -35,6 +35,7 @@ class Builder {
 
         let summary = {
             workspace: this.workspace,
+            buildfile: this.buildfile,
             success: result,
             buildtime: time,
             date: starttime,
