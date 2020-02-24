@@ -44,7 +44,8 @@ class Builder {
 
         console.log(JSON.stringify({
             logtype: "summary",
-            summary: summary
+            summary: summary,
+            buildfile: this.buildfile
         }));
 
         return result;
