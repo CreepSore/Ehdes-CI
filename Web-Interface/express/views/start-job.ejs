@@ -19,7 +19,7 @@
 
     <script type="application/javascript">
         var agents = JSON.parse("<%- agents.replace(/"/g, '\\"') %>");
-        var secret = <%- secret %>;
+        var secret = "<%- secret %>";
 
         function setupComboBoxes() {
             let selectAgent = document.getElementById("select-agent");
