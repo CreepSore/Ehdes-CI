@@ -117,6 +117,18 @@ const buildresults = function(storage, app) {
 };
 
 const registerApi = function(storage, app) {
+    app.use((req, res, next) => {
+        if(req.path.startsWith("/api/")) {
+            if(!req.query.secret) {
+                res.end(JSON.stringify({success: false, error: -1}));
+            }
+            else if(req.query.secret === storage.get("EXPRESS.SECRET", "3f10852ff0391d31c44be60e9bfb10f2")){
+                log(`[${req.connection.remoteAddress}] Accessing [${req.originalUrl}]`);
+                next();
+            }
+        }
+    });
+
     register(storage, app);
     jobs(storage, app);
     agents(storage, app);
