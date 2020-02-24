@@ -163,7 +163,8 @@ class Builder {
             if(rule.matchtype) matchtype = rule.matchtype;
             if(!rule.findstring) continue;
 
-            findstring = new RegExp(rule.findstring);
+            let regex = rule.findstring.match(/\/(.*)\/(.*)/);
+            findstring = new RegExp(regex[1], regex[2]);
 
             let matched;
             switch(matchtype) {
