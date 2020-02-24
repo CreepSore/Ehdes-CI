@@ -23,7 +23,7 @@ class Communicator {
     start() {
         this.log("Started");
         this.heartbeat();
-        setInterval(() => { this._loop(); }, 100);
+        setInterval(() => { this._loop(); }, 5000);
         setInterval(() => { this.heartbeat(); }, 5000);
     }
 
