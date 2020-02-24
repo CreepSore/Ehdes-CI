@@ -229,8 +229,8 @@ class Builder {
         return result;
     }
 
-    replacePathVariables(path) {
-        let result = path;
+    replacePathVariables(pth) {
+        let result = pth;
         result = result.replace(/\${WORKSPACE}/g, this.workspace.path);
         return result;
     }
