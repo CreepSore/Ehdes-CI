@@ -122,7 +122,7 @@ const registerApi = function(storage, app) {
             if(!req.query.secret) {
                 res.end(JSON.stringify({success: false, error: -1}));
             }
-            else if(req.query.secret === storage.get("EXPRESS.SECRET", "3f10852ff0391d31c44be60e9bfb10f2")){
+            else if(req.query.secret === storage.get("EXPRESS.SECRET")){
                 log(`[${req.connection.remoteAddress}] Accessing [${req.originalUrl}]`);
                 next();
             }

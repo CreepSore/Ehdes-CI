@@ -33,13 +33,15 @@ const registerViews = function(storage, app) {
                 ["UUID", "Workspaces"]
             ],
             body: body,
-            cssfiles: ["/css/basic_table.css"]
+            cssfiles: ["/css/basic_table.css"],
+            secret: storage.get("EXPRESS.SECRET")
         });
     });
 
     app.get("/startjob", (req, res) => {
         res.render("start-job", {
-            agents: JSON.stringify(storage.get("EXPRESS.AGENTS"))
+            agents: JSON.stringify(storage.get("EXPRESS.AGENTS")),
+            secret: storage.get("EXPRESS.SECRET")
         });
     });
 
@@ -60,7 +62,8 @@ const registerViews = function(storage, app) {
 
         res.render("job-details", {
             job: job,
-            buildresult: buildresult
+            buildresult: buildresult,
+            secret: storage.get("EXPRESS.SECRET")
         });
     });
 };
