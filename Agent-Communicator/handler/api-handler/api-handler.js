@@ -22,6 +22,9 @@ class ApiHandler extends ApiHandlerInterface {
                                 label: this.config.label,
                                 workspaces: workspaces
                             }
+                        },
+                        qs: {
+                            secret: this.config.controller.secret
                         }
                     }, (e, r, b) => {
                         if(e) {
@@ -51,6 +54,9 @@ class ApiHandler extends ApiHandlerInterface {
             request.post(url, {
                 form: {
                     buildresult: result
+                },
+                qs: {
+                    secret: this.config.controller.secret
                 }
             }, (e, r, b) => {
                 if(e) {
@@ -74,7 +80,8 @@ class ApiHandler extends ApiHandlerInterface {
         return new Promise((res, rej) => {
             request.get(url, {
                 qs: {
-                    uuid: this.config.uuid
+                    uuid: this.config.uuid,
+                    secret: this.config.controller.secret
                 }
             }, (e, r, b) => {
                 if(e) {
