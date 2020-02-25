@@ -28,7 +28,7 @@ const register = function(storage, app) {
 const jobs = function(storage, app) {
     app.get("/api/jobs", (req, res) => {
         let uuid = req.query.uuid;
-        res.end(JSON.stringify(storage.get("EXPRESS.JOBS").filter(j => j.agentid === uuid)));
+        res.end(JSON.stringify(storage.get("EXPRESS.JOBS").filter(j => j.agentid === uuid || uuid === "*")));
     });
 
     app.post("/api/jobs", (req, res) => {
