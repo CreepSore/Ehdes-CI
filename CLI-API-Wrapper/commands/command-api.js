@@ -7,6 +7,7 @@ const CommandHandler = require("./command-handler");
 const cmdFetchJobs = function(args) {
     let apiurl = new url.URL(`${args.cfg.baseurl}/api/jobs`);
     apiurl.searchParams.append("secret", args.cfg.secret);
+    apiurl.searchParams.append("uuid", "*");
 
     fetch(apiurl)
         .then(res => res.json())
