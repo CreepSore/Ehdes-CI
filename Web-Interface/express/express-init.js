@@ -22,6 +22,7 @@ const checkKeepalive = function(agents, storage) {
 };
 
 const registerViews = function(storage, app) {
+    /*
     app.get("/agents", (req, res) => {
         let body = [];
         storage.get("EXPRESS.AGENTS").forEach(agent => {
@@ -44,6 +45,7 @@ const registerViews = function(storage, app) {
             secret: storage.get("EXPRESS.SECRET")
         });
     });
+    */
 
     app.get("/jobdetails/:jobid", (req, res) => {
         let buildresult = {};
