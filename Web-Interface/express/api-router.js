@@ -32,7 +32,7 @@ const jobs = function(storage, app) {
 
     app.post("/api/jobs", (req, res) => {
         if(!req.body.job) {
-            res.end(JSON.stringify({success: false, error: 100}))
+            res.end(JSON.stringify({success: false, error: 100}));
             return;
         }
         let job = req.body.job;
