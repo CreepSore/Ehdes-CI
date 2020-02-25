@@ -7,8 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch current",
-            "program": "${workspaceFolder}/${relativeFile}",
+            "name": "Launch CLI",
+            "program": "${workspaceFolder}/CLI-API-Wrapper",
             "skipFiles": [
                 "<node_internals>/**"
             ]
