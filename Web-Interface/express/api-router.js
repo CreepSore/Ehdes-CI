@@ -103,8 +103,8 @@ const buildresults = function(storage, app) {
         fetch(url)
             .then(hres => hres.text())
             .then(body => {
-                res.set("cache-control", "no-cache");
-                res.set("content-type", "image/svg+xml;charset=utf-8");
+                res.set("Cache-Control", "no-cache");
+                res.set("Content-Type", "image/svg+xml;charset=utf-8");
                 res.end(body);
             })
             .catch(() => {
