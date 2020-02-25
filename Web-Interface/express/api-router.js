@@ -1,4 +1,5 @@
 "use strict";
+const fetch = require("node-fetch").default;
 const guuid = require("uuid");
 
 const log = function(msg, context) {
@@ -86,20 +87,29 @@ const buildresults = function(storage, app) {
         }
     });
 
-    app.get("/api/buildresults/shield/workspace/latest/:workspace", (req, res) => {
-        let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace);
+    app.get("/api/buildresults/shield/workspace/latest/:agentname/:workspace", (req, res) => {
+        let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace && b.job.agent === req.params.agentname);
+        let url = "https://img.shields.io/badge/build-no%20build-lightgray";
         if(builds.length > 0) {
             let build = builds[builds.length - 1];
             if(build.summary.success) {
-                res.redirect("https://img.shields.io/badge/build-succeeded-green");
+                url = "https://img.shields.io/badge/build-succeeded-green";
             }
             else {
-                res.redirect("https://img.shields.io/badge/build-failed-red");
+                url = res.redirect("https://img.shields.io/badge/build-failed-red");
             }
         }
-        else {
-            res.redirect("https://img.shields.io/badge/build-no%20build-lightgray");
-        }
+
+        fetch(url)
+            .then(hres => hres.text())
+            .then(body => {
+                res.set("cache-control", "no-cache");
+                res.set("content-type", "image/svg+xml;charset=utf-8");
+                res.end(body);
+            })
+            .catch(() => {
+                res.status(502).end();
+            });
     });
 
     app.post("/api/buildresults", (req, res) => {

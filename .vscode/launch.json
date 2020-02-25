@@ -7,6 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch current",
+            "program": "${workspaceFolder}/${relativeFile}",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Web-Interface",
             "program": "${workspaceFolder}/Web-Interface/app.js",
             "skipFiles": [
