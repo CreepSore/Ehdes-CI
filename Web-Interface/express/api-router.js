@@ -118,9 +118,9 @@ const buildresults = function(storage, app) {
 
 const registerApi = function(storage, app) {
     app.use((req, res, next) => {
-        if(req.path.startsWith("/api/") && !req.path.startsWith("/api/buildresults")) {
+        if(req.path.startsWith("/api/")) {
             log(`[${req.connection.remoteAddress}] Accessing [${req.originalUrl}]`);
-            if(req.path.startsWith("/api/buildresults") {
+            if(req.path.startsWith("/api/buildresults")) {
                 if(!req.query.secret) {
                     res.end(JSON.stringify({success: false, error: -1}));
                 }
