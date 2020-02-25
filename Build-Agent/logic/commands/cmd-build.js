@@ -41,14 +41,8 @@ let build = function(args) {
         }
     }
 
-    let succeeded = new Builder(workspace, buildfile, out).build();
-    if(succeeded) {
-        process.exit(0);
-    }
-    else {
-        process.exit(1);
-    }
-    return succeeded;
+    new Builder(workspace, buildfile, out).build();
+    process.exit(0);
 };
 
 module.exports = build;
