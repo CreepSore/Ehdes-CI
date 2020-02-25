@@ -120,21 +120,14 @@ const registerApi = function(storage, app) {
     app.use((req, res, next) => {
         if(req.path.startsWith("/api/")) {
             log(`[${req.connection.remoteAddress}] Accessing [${req.originalUrl}]`);
-            if(!req.path.startsWith("/api/buildresults")) {
-                if(!req.query.secret) {
+            if(!storage.get("EXPRESS.API.WHITELIST", []).filter(w => req.path.startsWith(w))) {
+                if(!req.query.secret || req.query.secret !== storage.get("EXPRESS.SECRET")) {
                     res.end(JSON.stringify({success: false, error: -1}));
-                }
-                else if(req.query.secret === storage.get("EXPRESS.SECRET")){
-                    next();
+                    return;
                 }
             }
-            else {
-                next();
-            }
         }
-        else {
-            next();
-        }
+        next();
     });
 
     register(storage, app);
