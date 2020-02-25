@@ -31,6 +31,23 @@ const jobs = function(storage, app) {
         res.end(JSON.stringify(storage.get("EXPRESS.JOBS").filter(j => j.agentid === uuid || uuid === "*")));
     });
 
+    app.post("/api/jobs/unquery", (req, res) => {
+        if(!req.body.job) {
+            res.end(JSON.stringify({success: false, error: 100}));
+            return;
+        }
+        let job = req.body.job;
+
+        if(!job.jobid) {
+            res.end(JSON.stringify({success: false, error: 10001}));
+        }
+
+        let sJobs = storage.get("EXPRESS.JOBS");
+        sJobs.splice(sJobs.indexOf(job), 1);
+        res.end(JSON.stringify({success: true, error: 0, jobid: job.jobid}));
+        log(`Removing Job[${job.jobid}].`, "API/jobs/unquery");
+    });
+
     app.post("/api/jobs", (req, res) => {
         if(!req.body.job) {
             res.end(JSON.stringify({success: false, error: 100}));
