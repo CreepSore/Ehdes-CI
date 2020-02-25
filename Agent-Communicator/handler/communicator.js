@@ -74,6 +74,20 @@ class Communicator {
                 }).catch(() => {
                     this.log(`Failed to push job-summary '${job.jobid}'`);
                 });
+            }).catch(error => {
+                this.log(`Agent exited with code ${error}`);
+                this.handledJobs.push(job.jobid);
+                this.api.pushBuildResult({
+                    job: job,
+                    summary: {
+                        success: false,
+                        error: `Agent exited with code ${error}`
+                    }
+                }).then(() => {
+                    this.log(`Finished job '${job.jobid}'`);
+                }).catch(() => {
+                    this.log(`Failed to push job-summary '${job.jobid}'`);
+                });
             });
     }
 

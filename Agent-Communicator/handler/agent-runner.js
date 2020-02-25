@@ -13,7 +13,7 @@ class AgentRunner {
     }
 
     buildWorkspace(workspace) {
-        return new Promise(res => {
+        return new Promise((res, rej) => {
             let agentproc = childProcess.fork(this.agentPath, ["build", `workspace=${workspace}`], {
                 silent: true,
                 execArgv: []
@@ -31,6 +31,12 @@ class AgentRunner {
                 }
                 catch (ex) {
                     process.stdout.write(data);
+                }
+            });
+
+            agentproc.on("exit", code => {
+                if(code !== 0) {
+                    rej(code);
                 }
             });
         });
