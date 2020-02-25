@@ -15,6 +15,29 @@ const cmdFetchJobs = function(args) {
         .catch(ex => console.log(JSON.stringify(ex, null, 4)));
 };
 
+const unqueueJob = function(args) {
+    if(args.length < 1) {
+        return;
+    }
+
+    let apiurl = new url.URL(`${args.cfg.baseurl}/api/jobs/unquery`);
+    apiurl.searchParams.append("secret", args.cfg.secret);
+
+    let body = {
+        job: {
+            jobid: args[0],
+        }
+    };
+
+    fetch(apiurl, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" }
+    }).then(res => res.text())
+        .then(b => console.log(b))
+        .catch(ex => console.log(ex));
+};
+
 const enqueueJob = function(args) {
     if(args.length < 2) {
         return;
@@ -40,7 +63,7 @@ const enqueueJob = function(args) {
 };
 
 const resolveEnqueueJob = function(args) {
-    if(args.length < 3) {
+    if(args.length < 2) {
         return;
     }
 
@@ -50,7 +73,7 @@ const resolveEnqueueJob = function(args) {
     fetch(apiurl)
         .then(res => res.json())
         .then(agents => {
-            let agent = agents.filter(a => a.label === args[0]);
+            let agent = agents.filter(a => a.label === args[0])[0];
             args[0] = agent.uuid;
             enqueueJob(args);
         }).catch(ex => console.log(JSON.stringify(ex, null, 4)));
@@ -82,8 +105,9 @@ module.exports = function(args) {
     cmdHandler.registerCommand(["j", "jobs", "fetchJobs", "viewJobs"], cmdFetchJobs);
     cmdHandler.registerCommand(["bs", "buildresult", "buildresults"], cmdFetchBuildresults);
     cmdHandler.registerCommand(["a", "agent", "agents"], cmdFetchAgents);
-    cmdHandler.registerCommand(["enqueue"], enqueueJob);
-    cmdHandler.registerCommand(["renqueue"], resolveEnqueueJob);
+    cmdHandler.registerCommand(["enqueue", "enq"], enqueueJob);
+    cmdHandler.registerCommand(["renqueue", "renq"], resolveEnqueueJob);
+    cmdHandler.registerCommand(["unqueue"], unqueueJob);
 
     args.cfg = args.storage.get("CFG");
     args.cmd = cmd;
