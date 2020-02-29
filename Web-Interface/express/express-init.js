@@ -22,31 +22,6 @@ const checkKeepalive = function(agents, storage) {
 };
 
 const registerViews = function(storage, app) {
-    /*
-    app.get("/agents", (req, res) => {
-        let body = [];
-        storage.get("EXPRESS.AGENTS").forEach(agent => {
-            body.push([agent.uuid, agent.workspaces ? agent.workspaces.join(", ") : ""]);
-        });
-
-        res.render("table-view", {
-            head: [
-                ["UUID", "Workspaces"]
-            ],
-            body: body,
-            cssfiles: ["/css/basic_table.css"],
-            secret: storage.get("EXPRESS.SECRET")
-        });
-    });
-
-    app.get("/startjob", (req, res) => {
-        res.render("start-job", {
-            agents: JSON.stringify(storage.get("EXPRESS.AGENTS")),
-            secret: storage.get("EXPRESS.SECRET")
-        });
-    });
-    */
-
     app.get("/jobdetails/:jobid", (req, res) => {
         let buildresult = {};
         let job = storage.get("EXPRESS.JOBS").filter(j => j.jobid === req.params.jobid)[0];
