@@ -14,8 +14,9 @@ class TaskFactory {
         if(verify === 0) {
             switch(task["build-type"]) {
                 case "shell": return this.constructShellTask(buildHandler, task, logger);
+                case "git": return this.constructGitTask(buildHandler, task);
                 default: {
-                    logger.warn(`Invalid Build-Type '${task["build-type"]} found!'`, "constructTask");
+                    logger.warn(`Invalid Build-Type '${task["build-type"]}' found!`, "constructTask");
                     return false;
                 }
             }
@@ -29,6 +30,11 @@ class TaskFactory {
             default: break;
         }
         return false;
+    }
+
+    static constructGitTask(buildHandler, task/* , logger */) {
+        const GitTask = require("./git-task");
+        return new GitTask(buildHandler, task);
     }
 
     static constructShellTask(buildHandler, task, logger) {

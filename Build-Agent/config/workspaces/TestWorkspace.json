@@ -4,5 +4,14 @@
     "path": "C:\\dev\\Test",
     "default-build-task": "build-script",
     "arch": "win-x86",
-    "loglevel": "DEBUG|INFO|WARN|ERROR|FATAL"
+    "loglevel": "DEBUG|INFO|WARN|ERROR|FATAL",
+    "preTasks": [
+        {
+            "label": "git-pull",
+            "build-type": "git",
+            "args": [
+                "pull"
+            ]
+        }
+    ]
 }

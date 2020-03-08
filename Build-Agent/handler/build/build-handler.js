@@ -27,27 +27,49 @@ class Builder {
     build() {
         return new Promise(res => {
             let starttime = new Date();
+
+            let preTasks = this.workspace.preTasks;
+            if(preTasks) {
+                preTasks.forEach((taskData, i) => {
+                    let task = taskFactory.constructTask(this, taskData);
+                    if(task) {
+                        task.run();
+                        if(i === preTasks.length - 1) {
+                            this.run().then(result => {
+                                this.finishBuild(starttime, result);
+                                res(result);
+                            });
+                        }
+                    }
+                });
+
+                return;
+            }
+
             this.run().then(result => {
-                let time = Number(new Date()) - Number(starttime);
-
-                let summary = {
-                    workspace: this.workspace,
-                    buildfile: this.buildfile,
-                    success: result,
-                    buildtime: time,
-                    date: starttime
-                };
-                fs.writeFileSync(path.join(this.outpath, "summary.json"), JSON.stringify(summary, null, 4));
-
-                console.log(JSON.stringify({
-                    logtype: "summary",
-                    summary: summary,
-                    buildfile: this.buildfile
-                }));
-
+                this.finishBuild(starttime, result);
                 res(result);
             });
         });
+    }
+
+    finishBuild(starttime, result) {
+        let time = Number(new Date()) - Number(starttime);
+
+        let summary = {
+            workspace: this.workspace,
+            buildfile: this.buildfile,
+            success: result,
+            buildtime: time,
+            date: starttime
+        };
+        fs.writeFileSync(path.join(this.outpath, "summary.json"), JSON.stringify(summary, null, 4));
+
+        console.log(JSON.stringify({
+            logtype: "summary",
+            summary: summary,
+            buildfile: this.buildfile
+        }));
     }
 
     async run() {
