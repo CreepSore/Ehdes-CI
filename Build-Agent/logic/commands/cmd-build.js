@@ -5,7 +5,7 @@ const fs = require("fs");
 // eslint-disable-next-line no-unused-vars
 const ArgumentParser = require("../../handler/argument-parser");
 const WorkspaceHandler = require("../../handler/workspace-handler");
-const Builder = require("../../handler/build-handler");
+const Builder = require("../../handler/build/build-handler");
 
 
 /**
@@ -41,8 +41,10 @@ let build = function(args) {
         }
     }
 
-    new Builder(workspace, buildfile, out).build();
-    process.exit(0);
+    new Builder(workspace, buildfile, out).build().then(() => {
+        process.exit(0);
+    });
+    return true;
 };
 
 module.exports = build;
