@@ -4,8 +4,7 @@ const Logger = require("../../logger");
 
 class RuleFactory {
     static constructRule(args, buildHandler, task, rule) {
-        let loglevel = buildHandler.workspace.loglevel;
-        if(!loglevel) loglevel = [];
+        let loglevel = buildHandler ? buildHandler.workspace.loglevel : [];
 
         let label = rule.prio;
         let logger = new Logger("RuleFactory", loglevel, true);
@@ -35,7 +34,7 @@ class RuleFactory {
         let label = rule.prio;
 
         switch(TextRule.verifyRule(rule)) {
-            case 0: return new TextRule();
+            case 0: return new TextRule(args, buildHandler, task, rule);
             case 50000: logger.error("Argument-Length is 0!", `verifyTask/${label}/ShellTask`); break;
             default: return false;
         }

@@ -1,13 +1,16 @@
 "use strict";
-
 const fs = require("fs");
 const path = require("path");
+
+const Logger = require("../logger");
+const taskFactory = require("./tasks/task-factory");
 
 class Builder {
     constructor(workspace, buildfile, outpath) {
         this.workspace = workspace;
         this.buildfile = buildfile;
         this.outpath = path.join(outpath, new Date().toISOString().replace(/:|\.|-/g, "_"));
+        this.logger = new Logger("BuildHandler", this.workspace.loglevel, true);
 
         this.next = this.workspace["default-build-task"];
     }
@@ -22,86 +25,55 @@ class Builder {
     }
 
     build() {
-        let starttime = new Date();
-        let result = this.run();
-        let endtime = new Date();
-        let time = Number(endtime) - Number(starttime);
+        return new Promise(res => {
+            let starttime = new Date();
+            this.run().then(result => {
+                let time = Number(new Date()) - Number(starttime);
 
-        let summary = {
-            workspace: this.workspace,
-            buildfile: this.buildfile,
-            success: result,
-            buildtime: time,
-            date: starttime
-        };
-        fs.writeFileSync(path.join(this.outpath, "summary.json"), JSON.stringify(summary, null, 4));
+                let summary = {
+                    workspace: this.workspace,
+                    buildfile: this.buildfile,
+                    success: result,
+                    buildtime: time,
+                    date: starttime
+                };
+                fs.writeFileSync(path.join(this.outpath, "summary.json"), JSON.stringify(summary, null, 4));
 
-        console.log(JSON.stringify({
-            logtype: "summary",
-            summary: summary,
-            buildfile: this.buildfile
-        }));
+                console.log(JSON.stringify({
+                    logtype: "summary",
+                    summary: summary,
+                    buildfile: this.buildfile
+                }));
 
-        return result;
+                res(result);
+            });
+        });
     }
 
-    run() {
+    async run() {
         if(!fs.existsSync(this.outpath)) {
             fs.mkdirSync(this.outpath);
         }
-        let currentTask = this.getTaskByLabel(this.next);
+        let taskData = this.getTaskByLabel(this.next);
+        let task = taskFactory.constructTask(this, taskData);
+        if(!task) {
+            this.logger.warn(`Invalid Task-Data: ${this.next}`);
+            return false;
+        }
 
-        let result = this.runTask(currentTask);
+
+        let result = await task.run();
+
         if(!result) {
             return false;
         }
 
-        if(currentTask.after) {
-            this.next = currentTask.after;
+        if(taskData.after) {
+            this.next = taskData.after;
             return this.run();
         }
-
-        return result;
+        return true;
     }
-
-    runTask(task) {
-        if(!task) return true;
-
-        let result = {};
-        switch(task["build-type"]) {
-            case "shell": {
-                // result = this.runShellTask(task);
-                break;
-            }
-
-            default: {
-                console.log(JSON.stringify({
-                    logtype: "invalid-task",
-                    message: `Invalid Task Build-Type '${task["build-type"]}'`
-                }));
-                return false;
-            }
-        }
-
-        if(result && result.rule !== -1) {
-            if(!result.success) {
-                console.log(JSON.stringify({
-                    logtype: "rule-finished",
-                    message: `[${task.label}] Rule ${result.rule} failed.`,
-                    success: false
-                }));
-            }
-            else {
-                console.log(JSON.stringify({
-                    logtype: "rule-finished",
-                    message: `[${task.label}] Rule ${result.rule} succeeded.`,
-                    success: true
-                }));
-            }
-        }
-        return result.success;
-    }
-
 
     replacePathVariables(pth) {
         let result = pth;
@@ -109,9 +81,10 @@ class Builder {
         if(!options) options = [];
 
         options.push({key: "WORKSPACE", value: this.workspace.path});
+        options.push({key: "OUT", value: this.outpath});
         options.forEach(o => {
-            let regex = new RegExp(`[^\\]\${${o.key}}`, "g");
-            result = result.replace(regex, o.value);
+            let regex = new RegExp(`[^\\\\]\\\${${o.key}}`, "g");
+            result = result.replace(regex, ` ${o.value}`);
         });
         return result;
     }

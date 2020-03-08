@@ -7,6 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch current File",
+            "program": "${file}",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch CLI",
             "program": "${workspaceFolder}/CLI-API-Wrapper",
             "skipFiles": [
@@ -32,7 +41,7 @@
             "program": "${workspaceFolder}\\Build-Agent\\ci-agent.js",
             "args": [
                 "build",
-                "workspace=Hitman-2-Hack"
+                "workspace=Test Workspace"
             ]
         },
         {

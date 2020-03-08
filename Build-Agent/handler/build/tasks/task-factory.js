@@ -46,7 +46,7 @@ class TaskFactory {
 
     static verifyTask(task) {
         if(!task.label) return 100;
-        if(task["build-type"]) return 200;
+        if(!task["build-type"]) return 200;
         if(!task.args) return 300;
 
         return 0;
