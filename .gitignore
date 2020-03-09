@@ -113,3 +113,6 @@ dist
 .vscode-test
 .vscode/launch.json
 .vscode/launch.json
+
+# Config
+Agent-Communicator/config.json
