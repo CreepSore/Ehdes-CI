@@ -116,3 +116,4 @@ dist
 
 # Config
 Agent-Communicator/config.json
+Build-Agent/config/workspaces/
