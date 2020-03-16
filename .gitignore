@@ -111,10 +111,8 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-.vscode/launch.json
-.vscode/launch.json
+.vscode/
 
 # Config
 Agent-Communicator/config.json
-.vscode/launch.json
 Build-Agent/config/workspaces/Shiro.json
