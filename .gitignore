@@ -116,3 +116,5 @@ dist
 
 # Config
 Agent-Communicator/config.json
+.vscode/launch.json
+Build-Agent/config/workspaces/Shiro.json

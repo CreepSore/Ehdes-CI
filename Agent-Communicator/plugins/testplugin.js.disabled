@@ -1,0 +1,32 @@
+"use strict";
+const IAcomPlugin = require("../handler/plugin-management/acom-plugin-interface");
+
+class ExamplePlugin extends IAcomPlugin {
+    constructor(storage) {
+        super(storage);
+    }
+
+    onEnable() {
+        let info = this.getInformation();
+        console.log(`[PluginManager] ${info.name} ${info.version} [${info.type}] loaded.`);
+        super.onEnable();
+    }
+
+    onDisable() {
+        let info = this.getInformation();
+        console.log(`[PluginManager] ${info.name} ${info.version} [${info.type}] unloaded.`);
+        super.onDisable();
+    }
+
+    getInformation() {
+        return {
+            author: "ehdes",
+            name: "Example Plugin",
+            version: "1.0.0",
+            description: "Example Plugin for testing purposes",
+            type: "Acom"
+        };
+    }
+}
+
+module.exports = ExamplePlugin;
