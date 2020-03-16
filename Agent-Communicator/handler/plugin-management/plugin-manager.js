@@ -80,7 +80,8 @@ class PluginManager {
     callPluginFunction(functionName, args, plugintype) {
         this.plugins.forEach(plugin => {
             if(!plugintype || plugintype === plugin.getInformation().type) {
-                plugin[functionName](args);
+                let func = plugin[functionName];
+                if(func) func(args);
             }
         });
     }

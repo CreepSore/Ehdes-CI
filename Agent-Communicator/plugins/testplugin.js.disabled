@@ -18,6 +18,14 @@ class ExamplePlugin extends IAcomPlugin {
         super.onDisable();
     }
 
+    onJobStart(job) {
+        console.log(`Start job ${job.jobid}`);
+    }
+
+    onJobFinished(buildResult) {
+        console.log(`Finished job ${buildResult.job.jobid}`);
+    };
+
     getInformation() {
         return {
             author: "ehdes",
