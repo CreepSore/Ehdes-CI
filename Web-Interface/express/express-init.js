@@ -75,6 +75,7 @@ const intialize = function(storage) {
 
     routeApi(storage, app);
     registerViews(storage, app);
+    storage.get("PLUGIN_MANAGER").callPluginFunction("onExpressInit", app, "Wi");
 
     let host = storage.get("EXPRESS.HOST", "127.0.0.1");
     let port = storage.get("EXPRESS.PORT", 8099);
