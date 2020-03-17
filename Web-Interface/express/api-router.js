@@ -113,7 +113,7 @@ const buildresults = function(storage, app) {
                 url = "https://img.shields.io/badge/build-succeeded-green";
             }
             else {
-                url = res.redirect("https://img.shields.io/badge/build-failed-red");
+                url = "https://img.shields.io/badge/build-failed-red";
             }
         }
 
