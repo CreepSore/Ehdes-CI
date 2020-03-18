@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const Logger = require("../logger");
+const WorkspaceHandler = require("../workspace-handler");
 const taskFactory = require("./tasks/task-factory");
 
 class Builder {
@@ -34,13 +35,15 @@ class Builder {
                 preTasks.forEach((taskData, i) => {
                     let task = taskFactory.constructTask(this, taskData);
                     if(task) {
-                        task.run();
-                        if(i === preTasks.length - 1) {
-                            this.run().then(result => {
-                                this.finishBuild(starttime, result);
-                                res(result);
-                            });
-                        }
+                        task.run().then(() => {
+                            this.buildfile = WorkspaceHandler.getWorkspaceBuildScript(workspace.name);
+                            if(i === preTasks.length - 1) {
+                                this.run().then(result => {
+                                    this.finishBuild(starttime, result);
+                                    res(result);
+                                });
+                            }
+                        });
                     }
                 });
 
