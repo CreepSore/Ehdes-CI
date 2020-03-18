@@ -1,24 +1,63 @@
 "use strict";
 
 class KeyStorage {
-    constructor() {
-        this.storage = {};
+    /**
+     * @param {String} name The identifier of this storage object
+     */
+    constructor(name) {
+        if(!name) {
+            throw new Error("[KeyStorage] Tried to create KeyStorage without name");
+        }
+
+        this.name = name;
+        this._entries = {};
     }
 
-    registerObject(key, object) {
-        this.storage[key] = object;
-    }
-
-    getObject(key) {
-        let o = this.storage[key];
-        if(o === undefined) {
-            throw new Error(`Storage-Object with key '${key}' does not exist!`);
+    /**
+     * @description Gets a registered object by its key
+     * @param {String} key The key of the requested object
+     * @param {*} defaultObj The object to return, if there is no object with such key
+     */
+    getObject(key, defaultObj = undefined) {
+        let o = this._entries[key];
+        if(!o) {
+            if(defaultObj !== undefined) {
+                return defaultObj;
+            }
+            throw new Error(`[KeyStorage] Unknown Object with key '${key}' requested in ${this.name}`);
         }
         return o;
     }
 
-    exists(key) {
-        return this.storage[key] !== undefined;
+    /**
+     * @description Gets a registered object by its key
+     * @param {String} key The key of the requested object
+     * @param {*} defaultObj The object to return, if there is no object with such key
+     */
+    get(key, defaultObj = undefined) {
+        return this.getObject(key, defaultObj);
+    }
+
+    /**
+     * @description Registers an object
+     * @param {String} key The key of the object that you want to register
+     * @param {*} object The object that you want to register
+     * @param {Boolean} overwrite Defines if the object should be overwritten, if it already exists
+     */
+    registerObject(key, object, overwrite = false) {
+        if(this._entries[key] && !overwrite) {
+            throw new Error(`Object with key '${key}' already exists in ${this.name}`);
+        }
+        this._entries[key] = object;
+    }
+
+    /**
+     * @description Registers an object without overriding it
+     * @param {String} key The key of the object that you want to register
+     * @param {*} object The object that you want to register
+     */
+    register(key, object) {
+        this.registerObject(key, object);
     }
 }
 

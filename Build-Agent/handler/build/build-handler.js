@@ -11,6 +11,7 @@ class Builder {
         this.workspace = workspace;
         this.buildfile = buildfile;
         this.outpath = path.join(outpath, new Date().toISOString().replace(/:|\.|-/g, "_"));
+        this.workspace.outpath = this.outpath;
         this.logger = new Logger("BuildHandler", this.workspace.loglevel, true);
 
         this.next = this.workspace["default-build-task"];

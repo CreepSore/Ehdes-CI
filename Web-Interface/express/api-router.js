@@ -12,7 +12,7 @@ const register = function(storage, app) {
         let agentData = req.body.agent;
         let agent = agents.filter(a => a.uuid === agentData.uuid);
 
-        if(agent.length === 0) { // if agent doesn't already exist
+        if (agent.length === 0) { // if agent doesn't already exist
             agentData.lastKeepalive = Number(new Date());
             agents.push(agentData);
             log(`Adding Agent[${agentData.uuid}].`, "API/Register");
@@ -21,7 +21,7 @@ const register = function(storage, app) {
             agent[0].lastKeepalive = Number(new Date());
             agent[0].workspaces = agentData.workspaces;
         }
-        res.end(JSON.stringify({success: true}));
+        res.end(JSON.stringify({ success: true }));
     });
 };
 
@@ -32,45 +32,45 @@ const jobs = function(storage, app) {
     });
 
     app.post("/api/jobs/unquery", (req, res) => {
-        if(!req.body.job) {
-            res.end(JSON.stringify({success: false, error: 100}));
+        if (!req.body.job) {
+            res.end(JSON.stringify({ success: false, error: 100 }));
             return;
         }
         let job = req.body.job;
 
-        if(!job.jobid) {
-            res.end(JSON.stringify({success: false, error: 10001}));
+        if (!job.jobid) {
+            res.end(JSON.stringify({ success: false, error: 10001 }));
         }
 
         let sJobs = storage.get("EXPRESS.JOBS");
         sJobs.splice(sJobs.indexOf(job), 1);
-        res.end(JSON.stringify({success: true, error: 0, jobid: job.jobid}));
+        res.end(JSON.stringify({ success: true, error: 0, jobid: job.jobid }));
         log(`Removing Job[${job.jobid}].`, "API/jobs/unquery");
     });
 
     app.post("/api/jobs", (req, res) => {
-        if(!req.body.job) {
-            res.end(JSON.stringify({success: false, error: 100}));
+        if (!req.body.job) {
+            res.end(JSON.stringify({ success: false, error: 100 }));
             return;
         }
         let job = req.body.job;
-        if(!job.agentid) {
-            res.end(JSON.stringify({success: false, error: 10000}));
+        if (!job.agentid) {
+            res.end(JSON.stringify({ success: false, error: 10000 }));
             return;
         }
 
-        if(!job.jobid) {
+        if (!job.jobid) {
             job.jobid = guuid.v1().toString();
         }
 
         let sJobs = storage.get("EXPRESS.JOBS");
-        if(job.workspace) {
+        if (job.workspace) {
             sJobs.push(job);
-            res.end(JSON.stringify({success: true, error: 0, jobid: job.jobid}));
+            res.end(JSON.stringify({ success: true, error: 0, jobid: job.jobid }));
             log(`Adding Job[${job.jobid}].`, "API/jobs");
         }
         else {
-            res.end(JSON.stringify({success: false, error: 10002}));
+            res.end(JSON.stringify({ success: false, error: 10002 }));
         }
     });
 };
@@ -96,7 +96,7 @@ const buildresults = function(storage, app) {
 
     app.get("/api/buildresults/workspace/latest/:workspace", (req, res) => {
         let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace);
-        if(builds.length > 0) {
+        if (builds.length > 0) {
             res.end(JSON.stringify(builds[builds.length - 1]));
         }
         else {
@@ -106,27 +106,20 @@ const buildresults = function(storage, app) {
 
     app.get("/api/buildresults/shield/workspace/latest/:agentname/:workspace", (req, res) => {
         let builds = storage.get("EXPRESS.BUILDS", []).filter(b => b.job.workspace === req.params.workspace && b.job.agent === req.params.agentname);
-        let url = "https://img.shields.io/badge/build-no%20build-lightgray";
-        if(builds.length > 0) {
+        let shield = "NO_BUILD";
+        if (builds.length > 0) {
             let build = builds[builds.length - 1];
-            if(build.summary.success) {
-                url = "https://img.shields.io/badge/build-succeeded-green";
+            if (build.summary.success) {
+                shield = "SUCCEEDED";
             }
             else {
-                url = res.redirect("https://img.shields.io/badge/build-failed-red");
+                shield = "FAILED";
             }
         }
 
-        fetch(url)
-            .then(hres => hres.text())
-            .then(body => {
-                res.set("Cache-Control", "no-cache");
-                res.set("Content-Type", "image/svg+xml;charset=utf-8");
-                res.end(body);
-            })
-            .catch(() => {
-                res.status(502).end();
-            });
+        res.set("Cache-Control", "no-cache");
+        res.set("Content-Type", "image/svg+xml;charset=utf-8");
+        res.end(storage.get(`DEP.SHIELDS.${shield}`));
     });
 
     app.post("/api/buildresults", (req, res) => {
@@ -134,22 +127,52 @@ const buildresults = function(storage, app) {
         storage.get("EXPRESS.BUILDS").push(result);
 
         let sjobs = storage.get("EXPRESS.JOBS");
-        if(sjobs.filter(j => result.job.jobid === j.jobid).length > 0) {
+        if (sjobs.filter(j => result.job.jobid === j.jobid).length > 0) {
             let job = sjobs[0];
             sjobs.splice(sjobs.indexOf(job), 1);
         }
 
-        res.end(JSON.stringify({success: true, error: 0}));
+        res.end(JSON.stringify({ success: true, error: 0 }));
+    });
+};
+
+const prefetchShields = function(storage) {
+    let toFetch = [
+        {
+            name: "NO_BUILD",
+            url: "https://img.shields.io/badge/build-no%20build-lightgray"
+        },
+        {
+            name: "SUCCEEDED",
+            url: "https://img.shields.io/badge/build-succeeded-green"
+        },
+        {
+            name: "FAILED",
+            url: "https://img.shields.io/badge/build-failed-red"
+        }
+    ];
+
+    toFetch.forEach((shield, i) => {
+        setTimeout(() => {
+            fetch(shield.url)
+                .then(hres => hres.text())
+                .then(body => {
+                    log(`Preloaded ${shield.name}`, "ShieldCaching");
+                    storage.register(`DEP.SHIELDS.${shield.name}`, body);
+                }).catch(() => {
+                    log(`Failed to preload ${shield.name}`, "ShieldCaching");
+                });
+        }, i * 1000);
     });
 };
 
 const registerApi = function(storage, app) {
     app.use((req, res, next) => {
-        if(req.path.startsWith("/api/")) {
+        if (req.path.startsWith("/api/")) {
             log(`[${req.connection.remoteAddress}] Accessing [${req.originalUrl}]`);
-            if(!storage.get("EXPRESS.API.WHITELIST", []).filter(w => req.path.startsWith(w))) {
-                if(!req.query.secret || req.query.secret !== storage.get("EXPRESS.SECRET")) {
-                    res.end(JSON.stringify({success: false, error: -1}));
+            if (!storage.get("EXPRESS.API.WHITELIST", []).filter(w => req.path.startsWith(w))) {
+                if (!req.query.secret || req.query.secret !== storage.get("EXPRESS.SECRET")) {
+                    res.end(JSON.stringify({ success: false, error: -1 }));
                     return;
                 }
             }
@@ -157,6 +180,7 @@ const registerApi = function(storage, app) {
         next();
     });
 
+    prefetchShields(storage);
     register(storage, app);
     jobs(storage, app);
     agents(storage, app);

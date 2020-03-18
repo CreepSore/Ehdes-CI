@@ -47,6 +47,8 @@ class Communicator {
             return;
         }
 
+        this.storage.get("PLUGIN_MGR").callPluginFunction("onLoop", null, "Acom");
+
         this.api.fetchJobs()
             .then(jobs => {
                 jobs.filter(e => {
@@ -62,11 +64,13 @@ class Communicator {
     startBuildJob(job) {
         this.runningJobs.push(job.jobid);
         this.log(`Starting job '${job.jobid}'`);
+        this.storage.get("PLUGIN_MGR").callPluginFunction("onJobStart", job, "Acom");
 
+        let buildResult;
         this.storage.getObject("AGENT").buildWorkspace(job.workspace)
             .then(summary => {
                 this.handledJobs.push(job.jobid);
-                this.api.pushBuildResult({
+                this.api.pushBuildResult(buildResult = {
                     job: job,
                     summary: summary
                 }).then(() => {
@@ -74,10 +78,12 @@ class Communicator {
                 }).catch(() => {
                     this.log(`Failed to push job-summary '${job.jobid}'`);
                 });
+
+                this.storage.get("PLUGIN_MGR").callPluginFunction("onJobFinished", buildResult, "Acom");
             }).catch(error => {
                 this.log(`Agent exited with code ${error}`);
                 this.handledJobs.push(job.jobid);
-                this.api.pushBuildResult({
+                this.api.pushBuildResult(buildResult = {
                     job: job,
                     summary: {
                         success: false,
@@ -88,6 +94,7 @@ class Communicator {
                 }).catch(() => {
                     this.log(`Failed to push job-summary '${job.jobid}'`);
                 });
+                this.storage.get("PLUGIN_MGR").callPluginFunction("onJobFinished", buildResult, "Acom");
             });
     }
 

@@ -1,0 +1,36 @@
+"use strict";
+const IWiPlugin = require("../handler/plugin-management/wi-plugin-interface");
+
+class ExamplePlugin extends IWiPlugin {
+    constructor(storage) {
+        super(storage);
+    }
+
+    onEnable() {
+        let info = this.getInformation();
+        console.log(`[PluginManager] ${info.name} ${info.version} [${info.type}] loaded.`);
+        super.onEnable();
+    }
+
+    onDisable() {
+        let info = this.getInformation();
+        console.log(`[PluginManager] ${info.name} ${info.version} [${info.type}] unloaded.`);
+        super.onDisable();
+    }
+
+    onExpressInit(app) {
+        console.log("onExpressInit");
+    }
+
+    getInformation() {
+        return {
+            author: "ehdes",
+            name: "Example Plugin",
+            version: "1.0.0",
+            description: "Example Plugin for testing purposes",
+            type: "Acom"
+        };
+    }
+}
+
+module.exports = ExamplePlugin;
