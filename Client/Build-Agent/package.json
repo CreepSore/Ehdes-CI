@@ -1,0 +1,14 @@
+{
+  "name": "build-agent",
+  "version": "1.0.0",
+  "description": "Ehdes-CI Build Agent",
+  "main": "ci-agent.js",
+  "scripts": {},
+  "author": "ehdes",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^13.7.0",
+    "eslint": "^6.8.0"
+  }
+}

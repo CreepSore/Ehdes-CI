@@ -1,0 +1,11 @@
+{
+    "uuid": "2409d320-2b30-40f4-917a-177c5b6056ec",
+    "label": "Main",
+    "controller": {
+        "url": "https://ci.ehdes.com",
+        "secret": "---- your secret here ----"
+    },
+    "agent": {
+        "path": "/var/www/ci/Ehdes-CI/Build-Agent/ci-agent.js"
+    }
+}

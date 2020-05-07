@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ehdes-CI | Agents</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="startjob.css">
+
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="container-job">
+        <h1>Jobdetails</h1>
+        <pre><%= JSON.stringify(job, null, 4); %></pre>
+    </div>
+
+    <% if(buildresult.summary) { %>
+    <div id="container-result">
+        <h1>Buildresult</h1>
+        <pre><%= JSON.stringify(buildresult, null, 4); %></pre>
+    </div>
+    <% } %>
+
+    <script type="application/javascript">
+        var pJob;
+        var pBuild;
+
+        function setupVars() {
+            pJob = JSON.parse("<%- JSON.stringify(job).replace(/"/g, '\\"') %>");
+            <% if(buildresult) { %>
+                pBuild = JSON.parse("<%- JSON.stringify(buildresult).replace(/"/g, '\\"') %>");
+            <% } %>
+        }
+
+        window.addEventListener("load", () => {
+            setupVars();
+        });
+    </script>
+</body>
+</html>
