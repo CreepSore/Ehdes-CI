@@ -1,3 +1,3 @@
 #!/bin/bash
-screen -dmS CI-WI node Web-Interface/app.js
-screen -dmS CI-ACOM node Agent-Communicator/launcher.js
+screen -dmS CI-WI node Client/Web-Interface/app.js
+screen -dmS CI-ACOM node Client/Agent-Communicator/launcher.js
